@@ -1,0 +1,22 @@
+div.container {
+    margin-top: 20px;
+}
+
+div.adtitle {
+    padding: 2em;
+    background-size: cover;
+    background-position: center center;
+}
+
+div.adtitle h1, div.adtitle p {
+    color: white;
+    text-shadow: 3px 3px 3px black;
+}
+
+div.carousel-caption {
+    text-shadow: 3px 3px 3px black;
+}
+
+div.card a {
+    text-decoration: none;
+}

@@ -1,0 +1,45 @@
+{# ===  concerne le bouton d'ajout d'image === #}
+{% block _ad_images_widget %}
+    <p>Ajoutez vos propres images !</p>
+
+    {{ form_widget(form) }} {#Attention ici la variable form = uniquement le champ ad_image ! #}
+
+    <input type="hidden" id="widgets-counter" value="0"> <!-- Pour régler le bug JS des doublons d'id quand supprime et recréer un sousformulaire -->
+
+    <div class="form-group" id="widgets-counter"> 
+        <button type="button" id="add_image" class="btn btn-primary">Ajouter une image</button>
+    </div>
+
+{% endblock %}
+
+{% block _ad_images_entry_row %} {#Une row possède: label, erreurs, les widget, les aides #}
+    {{ form_widget(form) }}
+{% endblock %}
+
+
+{% block _ad_images_entry_widget %} 
+<!-- Ce block se réfèrent aux entrées 'entry' du sous formulaire -->
+    <div class="form-group" id="block_{{id}}"> {# On veut iddentifier cette div. L'id est un id qui existe pour chaque entrée, ex: ad_images_0_url #}
+        <div class="row">
+            <div class="col-10">
+                <div class="row">
+                    <div class="col">
+                        {{ form_widget(form.url) }}
+                        {{ form_errors(form.url) }} {# Pour afficher les msg d'erreurs des sous-form (venant des asserts) #}
+                    </div>
+                    <div class="col">
+                        {{ form_widget(form.caption) }}
+                        {{ form_errors(form.caption) }}
+                    </div>
+                 </div>
+            </div>
+            <!-- Séparation en 2 div col pour ici ajouter un bouton supprimer -->
+            <div class="col-2">
+                <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+                <!-- Rappel : data-* sont des attributs de données. 
+                Ils permettent d’échanger des données entre le HTML et la représentation du DOM, qu’on peut manipuler avec des scripts.  -->
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

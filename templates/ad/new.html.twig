@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Création d'une annonce{% endblock %}
+
+{# {% form_theme form _self %} Spécifie un thème, dans ce fichier (self) (suite au DRY on le fait plus dans ce fichier) #}
+{% form_theme form 'ad/_collection.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Créer une annonce</h1>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Modifier l'annonce</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<!-- Script JS pour le bouton qui permet dajouter des sousformulaires dimages -->
+<script src="/js/ad.js"></script>
+{% endblock %}
+
