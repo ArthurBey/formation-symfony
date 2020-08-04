@@ -52,19 +52,21 @@
 
         </div>
         <div class="col">
+            {% set a = ad.author %} {# On créer cette variable pour simplifier l'écriture... #}
             <div class="row">
                 <div class="col-4">
-                    <img src="http://placehold.it/64x64" alt="avatar">
-                </div>
+                    <a href="{{ path('user_show', {'slug': a.slug}) }}"> {# On rend l'image de profil cliquable pour attérir sur page profil d'user #}
+                        <img src="{{ a.picture }}" alt="avatar de {{ a.fullName }}" class="avatar">  {# cf méthode getFullName() de User qu'on a crée qui permet de récup fullname plus simplement  #}
+                    </a>
+                    
+                </div> {# classes avatar et avatar-medium c'est du css custom ! cf public\css\app.css #}
                 <div class="col">
-                    <h3>Gwendolen Rise</h3>
-                    <span class="badge badge-primary">3 annonces</span>
+                    <a href="{{ path('user_show', {'slug': a.slug}) }}">
+                        <h3>{{ a.fullName }}</h3>
+                    </a>
+                    <span class="badge badge-primary">{{ a.ads | length }} annonces</span>
                 </div>
-            </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae amet aperiam autem voluptatum iste incidunt odit quis assumenda, harum velit!</p>
-                <p>Alias magnam necessitatibus delectus aperiam fugit? Ad accusantium similique sunt quaerat vero vitae, corrupti nesciunt eligendi asperiores excepturi fugit natus?</p>
-                <p>Explicabo consequuntur minima enim, at rerum vitae debitis ipsam corrupti eligendi quidem. Eum rerum numquam quaerat est quos libero quia.</p>
-            </div>
+            </div>{{ a.description | raw }}</div> 
     </div>
 </div>
 {% endblock %}

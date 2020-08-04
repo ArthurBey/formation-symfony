@@ -1,5 +1,5 @@
 div.container {
-    margin-top: 20px;
+    margin-top: 21px;
 }
 
 div.adtitle {
@@ -19,4 +19,16 @@ div.carousel-caption {
 
 div.card a {
     text-decoration: none;
+}
+
+.avatar {
+    max-width: 128px;
+    max-height: 128px;
+    border-radius: 50%;
+}
+
+.avatar-mini {
+    max-width: 30px;
+    max-height: 30px;
+    
 }
