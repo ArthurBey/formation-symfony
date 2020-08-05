@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Image;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -22,7 +23,22 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('FR-fr');
-        
+
+        // On créer un Rôle 'admin' (une entité Role) puis un utilisateur admin
+        $adminRole = new Role();
+        $adminRole->setTitle('ROLE_ADMIN'); // Note : Pour chaque entité User on a deja getRoles qui renvoi par dégaut ['ROLE_USER']
+        $manager->persist($adminRole);
+        $adminUser = new User(); // On créer un utilisateur Admin
+        $adminUser->setFirstName('Arthur')
+                  ->setLastName('Bachirov')
+                  ->setEmail('arthur.bachirov@gmail.com')
+                  ->setPassword($this->encoder->encodePassword($adminUser, 'Password'))
+                  ->setPicture('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTHwT4KCr035BrAOXryRaf1bT1eF3914jKe2A&usqp=CAU')
+                  ->setIntroduction($faker->sentence())
+                  ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
+                  ->addUserRole($adminRole); // ICI ON AJOUTE LENTITE ROLE D'ADMIN
+        $manager->persist($adminUser); 
+
         //Les utilisateurs
         $users = [];
         $genres = ['male', 'female'];
@@ -43,7 +59,7 @@ class AppFixtures extends Fixture
                  ->setEmail($faker->email)
                  ->setIntroduction($faker->sentence())
                  ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
-                 ->setHash($hash)
+                 ->setPassword($hash)
                  ->setPicture($picture);
 
             $manager->persist($user);
