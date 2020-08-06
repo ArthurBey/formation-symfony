@@ -30,5 +30,10 @@ div.card a {
 .avatar-mini {
     max-width: 30px;
     max-height: 30px;
+    border-radius: 50%;
     
+}
+
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
+    color: firebrick !important;
 }

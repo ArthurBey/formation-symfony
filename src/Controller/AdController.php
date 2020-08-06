@@ -27,7 +27,7 @@ class AdController extends AbstractController
      /**
      * Créer une annonce
      * @Route("ads/new", name="ads_create")
-     * @IsGranted("ROLE_USER", message="Compte utilisateur requis")
+     * @IsGranted("ROLE_USER")
      * 
      * @return Response
      */
@@ -65,7 +65,7 @@ class AdController extends AbstractController
     /**
      * Editer une annonce via un form d'edition
      * @Route("/ads/{slug}/edit", name="ads_edit")
-     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="Vous n'êtes pas auteur de cette annonce")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()")
      * @return Response
      */
     public function edit(Ad $ad, Request $request, EntityManagerInterface $manager){ // On recevra le bon Ad grace au ParamConverter

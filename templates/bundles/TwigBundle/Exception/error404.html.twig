@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+{# Pour tester cette page : /_error/404 #}
+{# Il faut exactement les mêmes sous-dossiers pour que ce soit pris en compte 
+car à la base c'est le bundle 'TwigBundle' qui gère les pages d'erreurs #}
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Oooooops ! Cette page n'existe pas !!</h1>
+    <p>Vous pouvez retourner à l'accueil</p>
+
+    <a href="{{ path('home') }}" class="btn btn-primary">Retourner à l'accueil</a>
+</div>
+{% endblock %}

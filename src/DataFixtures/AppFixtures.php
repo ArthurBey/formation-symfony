@@ -7,6 +7,7 @@ use Faker\Factory;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\Booking;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -45,14 +46,14 @@ class AppFixtures extends Fixture
         for($i = 1; $i <= 10; $i++) {
             $user = new User();
 
-            $genre = $faker->randomElement($genres);
+            $genre     = $faker->randomElement($genres);
 
-            $picture = "https://randomuser.me/api/portraits/";
+            $picture   = "https://randomuser.me/api/portraits/";
             $pictureId = $faker->numberBetween(1, 99) . ".jpg";
 
-            $picture .= ($genre == 'male' ? 'men/' : 'women/') . $pictureId;
+            $picture  .= ($genre == 'male' ? 'men/' : 'women/') . $pictureId;
 
-            $hash = $this->encoder->encodePassword($user, 'password');
+            $hash      = $this->encoder->encodePassword($user, 'password');
 
             $user->setFirstName($faker->firstname($genre)) // Faker peut génerer nom en f. du genre
                  ->setLastName($faker->lastname)
@@ -88,6 +89,31 @@ class AppFixtures extends Fixture
                       ->setAd($ad);
                 $manager->persist($image);
 
+            }
+
+            // Gestion des résa (pour une annonce)
+            for($j = 1; $j <= mt_rand(0, 10) ; $j++){
+                $booking = new Booking();
+
+                $createdAt = $faker->dateTimeBetween('- 6 months');
+                $startDate = $faker->dateTimeBetween('- 3 months');
+                // gestion date de départ
+                $duration  = mt_rand(3, 10);
+                $endDate   = (clone $startDate)->modify("+$duration days"); /* modify() est une méthode des objets DateTime()
+                ‘clone’ permet de créer une copie iddentique de l’objet, car sinon ici la méthode modify va également modifier la variable $startDate ! */
+                $amount    = $ad->getPrice() * $duration;
+                $booker    = $users[mt_rand(0, count($users) -1)]; // -1 car 1er user index 0
+                $comment   = $faker->paragraph(); // Commentaire style "Nous voudrions faire checkine plus tot euh... "
+                
+                $booking->setBooker($booker)
+                        ->setAd($ad)
+                        ->setStartDate($startDate)
+                        ->setEndDate($endDate)
+                        ->setCreatedAt($createdAt)
+                        ->setAmount($amount)
+                        ->setComment($comment);
+
+                $manager->persist($booking);
             }
 
             $manager->persist($ad);

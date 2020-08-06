@@ -40,7 +40,7 @@ class RegistrationController extends AbstractController
                 "Votre compte a bien été créé !"
             );
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('account_login');
         }
 
         return $this->render('registration/register.html.twig', [
