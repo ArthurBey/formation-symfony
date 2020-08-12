@@ -39,6 +39,7 @@ class BookingType extends ApplicationType
     {
         $resolver->setDefaults([
             'data_class' => Booking::class,
+            'validation_groups' => ['Default', 'front'] // On ajoute les validation Groups vis à vis des assert des startDate et endDate
         ]);
     }
 }

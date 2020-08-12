@@ -1,0 +1,145 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Modification de l'annonce {{ ad.id }}{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+<div class="container">
+    <h1 class="my-5">Annonce : {{ad.title}}</h1>
+
+    {{ form_start(form) }}
+
+    <div class="row">
+        <div class="col">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h4 class="card-title">Modération de l'annonce</h4>
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form) }}
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-light mb-5">
+                <div class="card-header">
+                    <h4 class="card-title">Réservations de l'annonce</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Voyageur</th>
+                                <th>Date de création de réservation</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in ad.bookings %}
+                             <tr>
+                                <td>{{ booking.id }}</td>
+                                <td>{{ booking.booker.fullName }}</td>
+                                <td>{{ booking.createdAt | date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                </td>
+                            </tr>   
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card bg-light"> <!-- nb: cette card est tjr dans la meme col que celle d'en haut -->
+                <div class="card-header">
+                    <h4 class="card-title">Commentaires de l'annonce</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Voyageur</th>
+                                <th>Note</th>
+                                <th>Contenu</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in ad.comments %}
+                             <tr>
+                                <td>{{ comment.id }}</td>
+                                <td>{{ comment.author.fullName }}</td>
+                                <td>{{ comment.rating }}</td>
+                                <td>{{ comment.content }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                </td>
+                            </tr>   
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{ form_end(form) }}
+</div>
+    
+{% endblock %}
+
+{# Sans la section ci dessous: Le sous form qui affiche les formulaires d'image dans edition d'Ad d'un admin, donne un affichage basique sans trop de sens #}
+{# Il faut prévenir à twig d'utiliser ce style personnalisé : d'ou le form_theme en haut  #}
+{% block _ad_images_widget %} {# Ce _ad_image -> id de la div en question / widget : pour le widget en question #}
+    <div id="block_{{id}}"> {# On iddentifie pour le JS, pour le click poubelle/delete #}
+        {{ form_widget(form) }} {# Rappel variable form ne représente ici plus que le formulaire d'images (collection type) #}
+    </div>
+{% endblock %}
+
+{% block _ad_images_entry_row %} {# entry_row : présentation de chaque LIGNE d'entrée: ici permet de ne plus afficher les label inutiles (1, 2, 3...) #}
+    {# form_label(form) : le fait d'omettre cette ligne permet de ne plus afficher les labels, uniquement le widget s'affiche (le sous formulaire...#}
+    {{ form_widget(form) }} 
+{% endblock %}
+
+{% block _ad_images_entry_widget %} {# entry: pour chaque "entré" du sous-form : On affiche contenu de ce block #}
+    <div class="row align-items-center mb-3">
+        <div class="col-4">
+        {% if value %} {# explication video 14.10 : au moment ou se créer la div de prototype, la variable value y est null #}
+            <img src="{{ value.url }}" class="img-fluid" alt=""> {# Plus pertinent de pouvoir voir une préview de l'image que juste l'url. img-fluid pour pas de débordement#}
+            {# form_row(form.url) }}  {# 2eme rappel : form + row : UNE entrée (url) du sous-form d'images ! #}
+            {{ form_row(form.url) }}
+        {% endif %}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.caption) }}
+        </div>
+        <div class="col"> {# On précise pas la col: bootstrap attribue ce qui reste: 12-4-6=2 #}
+            <button type="button" class="btn btn-danger" data-action="delete" data-target="#block_{{id}}">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div> 
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){ // Lorsque la page est chargée on exécute la fonction
+            // On séléctionne tout les éléments avec cet attribut, puis ajoute eventlistener
+            $('[data-action="delete"]').on('click', function(){
+                const target = this.dataset.target;
+                $(target).remove(); // allez hop supprime ça
+            });
+        });
+    </script>
+{% endblock %}

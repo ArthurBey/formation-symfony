@@ -7,10 +7,44 @@
 
 {% block body %}
     <div class="container">
-        <h1>Créer une annonce</h1>
+        <h1 class="my-5">Créer une annonce</h1>
         {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary">Publier l'annonce</button>
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-light">
+                    <h2>Informations générales</h2>
+                    <hr>
+                    {{ form_row(form.title) }}
+                    {{ form_row(form.slug) }}
+                    {{ form_row(form.price) }}
+                    {{ form_row(form.rooms) }}
+                </div>
+                <div class="alert alert-light">
+                    <h2>Détails de l'annonce</h2>
+                    <hr>
+                    {{ form_row(form.introduction) }}
+                    {{ form_row(form.content) }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="alert alert-light">
+                    <h2>Images de l'annonce</h2>
+                    <hr>
+                    {{ form_row(form.coverImage) }}
+                    {{ form_row(form.images) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-success clearfix"> <!-- clearfix permet de régler probleme quand un float empiètine ailleurs ! -->
+            <h2 class="alert-heading">Publier mon annonce</h2>
+            <p>Vous êtes sur le point de publier votre annonce ! </p>
+            <button type="submit" class="btn btn-primary float-right"> <!-- float-right : mettre bouton à droite -->
+                <i class="fas fa-check"></i> <!-- font-awesome: rajoute un petit logo "ok check" dans le bouton -->
+                 Publier l'annonce
+            </button> 
+        </div>
+        
         {{ form_end(form) }}
     </div>
 {% endblock %}

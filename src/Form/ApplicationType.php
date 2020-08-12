@@ -15,7 +15,7 @@ class ApplicationType extends AbstractType // AbstractType est la classe mère d
      * @return array
      */
     protected function getConfiguration($label, $placeholder, $options = []) {  
-        return array_merge([
+        return array_merge_recursive([ // _recursive car si jamais on merge avec un tableau d'autres options qui contient aussi par ex 'attr' -> ça supprimera l'ancien attr...
             'label' => $label, 
             'attr' => [
                     'placeholder' => $placeholder

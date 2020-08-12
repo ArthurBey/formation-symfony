@@ -7,7 +7,7 @@
     {% set author = ad.author %} #}
 
     <div class="container">
-        <h1>Votre réservation (n°{{ booking.id }})</h1>
+        <h1 class="my-5">Votre réservation (n°{{ booking.id }})</h1>
 
         {% if app.request.query.get('confirmed') %}
             <div class="alert alert-success">
@@ -20,7 +20,7 @@
         {% endif %}
 
         <div class="row">
-            <div class="col">
+            <div class="col-md">
                 <div class="alert alert-light">
                     <h2>Détails</h2>
                     <dl class="row"> <!-- <dl> description list, utilisé pour préciser des termes, dt -> titre, dd -> description -->
@@ -33,9 +33,9 @@
                         <dt class="col-md-4">Durée du séjour</dt>
                         <dd class="col-md-8">{{ booking.duration }} jour(s)</dd>
                         <dt class="col-md-4">Montant total </dt>
-                        <dd class="col-md-8">{{ booking.amount }} &euro;</dd>
+                        <dd class="col-md-8">{{ booking.amount | number_format(2, ',', ' ')}} &euro;</dd>  {# number_format() commen en PHP, pour afficher le prix au centième près #}
                         <dt class="col-md-4">Remarques particulières</dt>
-                        <dd class="col-md-8">{{ booking.comment }}</dd>
+                        <dd class="col-md-8">{{ booking.comment|default('Pas de commentaire') }}</dd> {# filtre default affiche valeur par défaut si comment vide #}
                     </dl>
 
                     <hr> <!-- séparation thématique -->
@@ -57,8 +57,29 @@
                     {{ booking.ad.author.description | raw }} <!-- NE PAS FAIRE DE RAW DANS LE PROJET ! ICI CEST CORRUPTIBLE !!!-->
                      <a href="{{ path('user_show', {'slug': booking.ad.author.slug}) }}" class="btn btn-primary text-decoration-none">En savoir plus sur {{ booking.ad.author.firstName }}</a>
                 </div>
+
+                <!-- On affiche possibilité de laisser una vis APRES le checkout -->
+                <div class="alert alert-light">
+                    <h2 class="alert-heading">Votre avis compte</h2>
+                    <!-- Si la date d'auj APRES date de départ -->
+                    {% if date() > date(booking.endDate)%}
+                        {% set comment = booking.ad.commentFromAuthor(app.user) %} 
+                        {% if comment is not null %} <!-- Il faut vérifier si l'user a deja laissé un avis ou non pour l'annonce-->
+                            <blockquote>{{comment.content}}</blockquote>
+                            <strong>Note :</strong> {% include 'common/rating.html.twig' with {'rating': comment.rating} %}
+                        {% else %}
+                            {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                           <button type="submit" class="btn btn-success">Publier</button>
+                           {{ form_end(form) }}
+                        {% endif %}
+                           
+                    {% else %}
+                        <p>Revenez après la fin de votre séjour pour laisser un avis !</p>
+                    {% endif %}
+                </div>
             </div>
-            <div class="col">
+            <div class="col-md">
                 <div class="alert alert-light">
                     <h2 class="alert-heading">Votre hébergement</h2>
                     <h4>

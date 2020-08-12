@@ -40,6 +40,7 @@ class RegistrationFormType extends ApplicationType
         $builder
             ->add('email', EmailType::class,  $this->getConfiguration("Email", "Votre e-mail"))
             ->add('agreeTerms', CheckboxType::class, [
+                'label' => "J'accepte les termes du contrat",
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
@@ -72,12 +73,7 @@ class RegistrationFormType extends ApplicationType
             ->add('lastName', TextType::class, $this->getConfiguration("Nom", "Votre nom"))
             ->add('introduction', TextType::class, $this->getConfiguration("Intorduction", "Présentez-vous en quelques mots"))
             ->add('picture', UrlType::class, $this->getConfiguration("Photo de profile (url)", "URL"))
-            ->add('description', TextareaType::class, $this->getConfiguration("Description", "Présentez-vous en plus long"))
-             ->add('save', 
-                  SubmitType::class, 
-                  [ "attr" => ['class' => 'btn btn-primary'],
-                    'label' => "Créer mon compte"
-                  ]); 
+            ->add('description', TextareaType::class, $this->getConfiguration("Description", "Présentez-vous en plus long"));
         ;
     }
 

@@ -7,22 +7,46 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %} 
     <div class="container">
+        <h1 class="my-5">Inscription</h1>
+
+        {{ form_start(registrationForm) }}
+
         <div class="row">
-            <div class="col-md-3">&nbsp;</div> <!-- Colonne medium 3 : disaparaitra en mobile / et contient un espace insécable-->
-            <div class="col-md-6">
-                <div class="bg-light py-3 px-3"> <!-- pour donner un fond 'light' à la div + padding horiz. et vertical dans la div -->
-                    <h1>Inscription</h1>
-                    {{ form_start(registrationForm) }}
+            <div class="col">
+                <div class="alert alert-light">
+                    <h2 class="alert-heading">Informations générales</h2>
+                    <hr>
+                    {{ form_row(registrationForm.firstName) }}
+                    {{ form_row(registrationForm.lastName) }}
                     {{ form_row(registrationForm.email) }}
-                    {{ form_row(registrationForm.plainPassword, {
-                        label: 'mot de passe'
-                    }) }}
-                    {{ form_row(registrationForm.agreeTerms) }}
-                    {{ form_end(registrationForm) }}
-                   
+                    {{ form_row(registrationForm.picture) }}
                 </div>
-            </div> 
+                <div class="alert alert-light">
+                    <h2 class="alert-heading">Mot de passe</h2>
+                    <hr>
+                    {{ form_row(registrationForm.plainPassword) }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="alert alert-light">
+                    <h2 class="alert-heading">Détails</h2>
+                    <br>
+                    {{ form_row(registrationForm.introduction) }}
+                    {{ form_row(registrationForm.description) }}
+
+                    <hr>
+
+                    <p>Validez le formulaire d'inscription web en cliquant sur le bouton web ci dessous</p>
+                    {{ form_row(registrationForm.agreeTerms) }}
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i>
+                        S'inscrire !
+                    </button>
+                </div>
+            </div>
         </div>
+
+        {{ form_end(registrationForm) }}
     </div>
 {% endblock %}
 

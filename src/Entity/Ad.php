@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use Cocur\Slugify\Slugify;
 use App\Repository\AdRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -85,10 +86,16 @@ class Ad
      */
     private $bookings;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="Ad", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -293,5 +300,73 @@ class Ad
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAd() === $this) {
+                $comment->setAd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Obtenir la moyenne des notes d'une annonce
+     *
+     * @return float
+     */
+    public function getAvgRating() {
+        // array_reduce() applique itérativement une fonction callback aux éléments du tableau array de manière a réduire le tableau à une simple valeur
+        $sum = array_reduce($this->comments->toArray(), function($total, $comment){ // sauf que comments est une ArrayCollection et on attend un array, on utilise méthode des AC toArray
+            return $total + $comment->getRating();
+        }, 0); // on passe 0 pour $total, pour l'initialiser)
+
+        if(count($this->comments) > 0) { // PREVENTION DIVISION PAR 0 !!
+            return $sum / count($this->comments); 
+        }
+        return 0;
+        
+        /* Manière classique
+        $sum = 0;
+        foreach($this->comments as $comment){
+            $sum += $comment->getRating();
+        }
+        return $sum / count($this->comments); */
+    }
+
+    /**
+     * Permet de récuperer le commentaire de l'utilisateur connecté dans une annonce (si existe)
+     *
+     * @param User $author
+     * @return Comment|null
+     */
+    public function getCommentFromAuthor(User $author) {
+        foreach($this->comments as $comment) {
+            if($comment->getAuthor() === $author) return $comment;
+        }
+        return null;
     }
 }

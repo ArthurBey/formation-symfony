@@ -5,7 +5,7 @@
 {% block body %}
 
 <div class="container">
-    <h1>Mes réservations</h1>
+    <h1 class="my-5">Mes réservations</h1>
     <div class="alert alert-info mt-5">
         <p>Retrouvez ici vos réservations passées et à venir</p>
     </div>
@@ -13,14 +13,24 @@
     {% for booking in app.user.bookings %}
     {# set ad = booking.ad / optionnel #}
         <div class="row mb-4">
-            <div class="col-4">
+            <div class="col-md-4"> {# md -> medium screen pour que responsive en mobile ! #}
                 <img src="{{ booking.ad.coverImage }}" alt="Photo de l'annonce {{ booking.ad.title }}" class="img-fluid"> <!-- img-fluid important pour resize -->
+
+                <div class="mt-3">
+                    {% set comment = booking.ad.commentFromAuthor(app.user) %}
+                    {% if comment is not null %}
+                        <strong>Note donnée: </strong> {% include "common/rating.html.twig" with {'rating': comment.rating} %}
+                    {% else %}
+                        Vous n'avez pas encore noté ça. 
+                        <a href="{{ path('booking_show', {'id': booking.id }) }}#comment" class="btn btn-link">Laisser un avis</a> <!-- le #comment permet de faire une ancre qui ammene direct devant la partie commentaire ! -->
+                    {% endif %}
+                </div>
             </div>
-            <div class="col-8">
+            <div class="col-md-8">
                 <h4>{{ booking.ad.title }}</h4>
                 <p>
                     Réservation <strong>n°{{ booking.id }}</strong>
-                    Du {{ booking.startDate|date('d/m/Y') }} au {{ booking.endDate|date('d/m/Y') }} pour {{ booking.amount}} &euro;
+                    Du {{ booking.startDate|date('d/m/Y') }} au {{ booking.endDate|date('d/m/Y') }} pour {{ booking.amount | number_format(2, ',', ' ')}} &euro;
                 </p>
                 <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-info">Afficher les détails</a>
             </div>

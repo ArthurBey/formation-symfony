@@ -37,3 +37,33 @@ div.card a {
 .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
     color: firebrick !important;
 }
+
+/* étoiles font-awesome */
+span.rating i {
+    color: goldenrod;
+}
+
+
+
+/* refonte du css du site */
+
+div.adtitle .btn {
+    margin-top: 2em;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+/* concernant les liens boutons */
+.alert a {
+    text-decoration: none;
+}
+.alert .btn {
+    color: white;
+}
+
+.avatar-micro {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+

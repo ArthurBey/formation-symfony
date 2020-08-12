@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion à l'administration</title>
+    <!-- Dans le tuto il veut faire un formulaire admin de login 'austère' et sans aucune extension de templates -->
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+
+    </style>
+</head>
+<body>
+        <div class="col-md-4"> <!-- Sur un écran moyen, s'étend sur une certaine largeur de 4/12eme de l'écran, s'annule sur un mobile -->
+            <div class="card bg-light mt-5">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="fas fa-lock"></i>
+                        Connexion à l'administration
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                    {% if error %}
+                        <div class="alert alert-danger"><p>Email/Mot de passe incorrect</p></div>
+                    {% endif %}
+
+                        <div class="form-group"><label for="inputEmail"></label><input type="text" class="form-control" value="{{ last_username }}" placeholder="adresse email" name="email"  id="inputEmail" required></div>
+                        <div class="form-group"><label for="inputPassword"></label><input type="password" class="form-control" placeholder="mot de passe" name="password" id="inputPassword" required></div>
+                        
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-lock-open"></i>
+                            Connexion 
+                        </button>
+                        <a href="{{ path('home') }}" class="btn btn-link">
+                            <i class="fas fa-arrow-circle-right"></i>
+                            Retour à l'accueil
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    
+   
+</body>
+</html>
+
+    {#
+        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+        See https://symfony.com/doc/current/security/remember_me.html
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div>
+    #}

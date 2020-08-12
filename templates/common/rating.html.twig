@@ -1,0 +1,10 @@
+<!-- Font Awesome, séparé car on veut utiliser ça dans plusieurs templates : DRY -->
+<span class="rating">
+    {% for i in 1..5 %}
+        {% if i <= rating %} <!-- le 'rating' doit être spécifié dans la vue parent: ex: comment.rating -->
+            <i class="fas fa-star"></i> <!-- fas -> étoile rempli / far -> vide -->
+        {% else %} 
+            <i class="far fa-star"></i>
+        {% endif %}
+    {% endfor %}
+</span>

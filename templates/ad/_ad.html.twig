@@ -1,12 +1,20 @@
 {# ===  concerne l'affichage d'une annonce en affichage style "carte" === #}
 {# ===  DRY : On retrouve cette feature dans plusieurs vues, copier/coller le code serait mauvaise pratique ! === #}
+{# De plus, on a ajouté feature des notes et étoiles + tard, mais s'est répercuté sur les différentes vues qui l'utilisent, d'ou l'interet ! #}
 
 {% set url = path('ads_show', {'slug': ad.slug}) %}
 <div class="col-md-4">
     <div class="card bg-light mb-3">
         <div class="card-header text-center">
-            {{ ad.rooms }} chambres, <strong>{{ ad.price }}&euro; / nuit</strong> <br>
-            <small>Pas encote noté</small>
+            {{ ad.rooms }} chambres, <strong>{{ ad.price | number_format(2, ',', ' ') }}&euro; / nuit</strong> <br> {# number_format() pour prix au centieme près #}
+
+            {# Affichage des notes #}
+            {% if ad.comments|length > 0 %}
+                {% include 'common/rating.html.twig' with {'rating': ad.avgRating} %}
+            {% else %}
+                <small>Pas encote noté</small
+            {% endif %}
+            >
         </div>
         <a href="{{ url }}">
             <img src="{{ ad.coverImage }}" alt="Image de l'appartement" style="height: 200px; width: 100%; display: block">
@@ -17,7 +25,7 @@
                 <a href="{{ url }}">{{ad.title}}</a>
             </h4>
             <p class="card-text">{{ad.introduction}}</p>
-            <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
+            <a href="{{ url }}" class="btn btn-primary float-right">En savoir plus</a> {# Float-right positionne le bouton à droite #}
             {% if app.user and app.user == ad.author %}
             <a href="{{ path('ads_edit', {'slug': ad.slug}) }}" class="btn btn-secondary">Modifier l'annonce</a>
         {% endif %}
