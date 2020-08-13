@@ -29,3 +29,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Quand Symfony va instancier notre service Pagination.php, on va lui indiquer que ce service nécessite un paramètre lors de sa construction
+    # Ainsi on a pas besoin de setTemplatePath dans les controleur, on le détermine directement ici et ce sera fait automatiquement à la construction
+    App\Service\Pagination:
+        arguments:
+            $templatePath: 'admin/common/pagination.html.twig'

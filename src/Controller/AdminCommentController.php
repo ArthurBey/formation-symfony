@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Service\Pagination;
 use App\Form\AdminCommentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,16 +14,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminCommentController extends AbstractController
 {
     /**
-     * @Route("/admin/comments", name="admin_comments_index")
+     * @Route("/admin/comments/{page<\d+>?1}", name="admin_comments_index")
      */
-    public function index()
-    {   // ou par injection de dep en arg : CommentRepository
-        $repository = $this->getDoctrine()->getRepository(Comment::class); 
-        $comments = $repository->findAll();
-        return $this->render('admin/comment/index.html.twig', [
-            'comments' => $comments
-        ]);
+    public function index($page, Pagination $pagination)
+    {   
+        // On indique juste l'entité et la page actuelle
+        $pagination->setEntityClass(Comment::class)
+                   ->setRoute('admin_comments_index') // on indique la route des liens cliquables de pagination
+                   ->setLimit(5) // ici on veut 5 comments par page au lieu de 10 par défaut
+                   ->setPage($page);
 
+        return $this->render('admin/comment/index.html.twig', [
+            'pagination' => $pagination // On laisse twig extraire les infos
+        ]);
     }
 
     /**

@@ -18,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for ad in pagination.data %}
+            {% for ad in ads %}
              <tr>
                 <td>{{ ad.id }}</td>
                 <td>{{ ad.title }}</td>
@@ -33,8 +33,24 @@
             {% endfor %}
         </tbody>
     </table>
-    {# --- barre de navigation des pages --- #}
-    {{ pagination.display() }}
-    
+
+    <div>
+    <div class="d-flex justify-content-center"> <!-- d-flex : display-flex / Pour centrer sur la page -->
+        <ul class="pagination">
+            <li class="page-item {% if page == 1 %}disabled{% endif %}"> <!-- flèche pour aller page de gauche -->
+                <a class="page-link" href="{{ path('admin_ads_index', {'page': page - 1}) }}">&laquo;</a>
+            </li>
+            {% for i in 1..pages %}
+            <li class="page-item {% if page == i %}active{% endif %}"> <!-- Si l'itération = à la page actuelle, class active -->
+                <a class="page-link" href="{{ path('admin_ads_index', {'page': i}) }}">{{ i }}</a>
+            </li>   
+            {% endfor %}
+            <li class="page-item {% if page == pages %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('admin_ads_index', {'page': page + 1}) }}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+   
+</div>
 </div>
 {% endblock %}
