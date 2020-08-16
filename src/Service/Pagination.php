@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Classe de pagination qui extrait toute notion de calcul et de récupération de données de nos controllers
  * 
  * Elle nécessite après instanciation qu'on lui passe l'entité sur laquelle on souhaite travailler
+ * Note : Les setters renvoient $this pour pouvoir enchainer les méthodes
  */
 class Pagination {
     /**
@@ -260,6 +261,6 @@ class Pagination {
      * @return string
      */
     public function getRoute(): string {
-        return $route;
+        return $this->route;
     }
 }

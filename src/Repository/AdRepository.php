@@ -19,6 +19,20 @@ class AdRepository extends ServiceEntityRepository
         parent::__construct($registry, Ad::class);
     }
 
+    // exploité par le HomeController pour afficher les apparts stars
+    // Ancienne version : il suffit d'avoir un seul bon avis pour etre le meilleur... Cf version d'en bas
+    public function findBestAds($limit) {
+        return $this->createQueryBuilder('a') // On précise l'alias 'a' -> forcément celui de l'entité Ad (ici AdRepository !)
+                    ->select('a as annonce, AVG(c.rating) as avgRating') // On veut récup annonces / ratings : dump pour visualiser
+                    ->join('a.comments', 'c')
+                    ->groupBy('a')
+                    ->orderBy('avgRating', 'DESC')
+                    ->setMaxResults($limit)
+                    ->getQuery() // En + par rapport à la méthode queryBuilder(QUERY) 
+                    ->getResult(); 
+                    // [ 0 => [ "annonce" => Entité Ad, "avgRating" => note(int) ], 1 => ... ]
+    }
+
     // /**
     //  * @return Ad[] Returns an array of Ad objects
     //  */

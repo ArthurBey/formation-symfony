@@ -35,3 +35,4 @@ services:
     App\Service\Pagination:
         arguments:
             $templatePath: 'admin/common/pagination.html.twig'
+            

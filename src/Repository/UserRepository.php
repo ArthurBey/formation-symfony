@@ -36,6 +36,33 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    // Dans cette ancienne version il suffisait d'avoir un seul avis 5/5 pour etre considéré comme le meilleur utilisateur
+    public function findBestUsersOld($limit = 2) {
+        return $this->createQueryBuilder('u') // On précise l'alias 'u' -> forcément celui de l'entité User
+                    ->select('u as user, AVG(c.rating) as avgRatings')
+                    ->join('u.ads', 'a')
+                    ->join('a.comments', 'c')
+                    ->groupBy('u')
+                    ->orderBy('avgRatings', 'DESC')
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    // Dans cette nouvelle version sont uniquement pris en compte annonces avec + de 3 avis
+    public function findBestUsers($limit = 2) {
+        return $this->createQueryBuilder('u') // On précise l'alias 'u' -> forcément celui de l'entité User
+                    ->select('u as user, AVG(c.rating) as avgRatings, COUNT(c) as sumComments') // COUNT(c) pour faire un HAVING sumComments > 3
+                    ->join('u.ads', 'a')
+                    ->join('a.comments', 'c')
+                    ->groupBy('u') // Pour faire un having, il faut forcément avoir un groupement
+                    ->having('sumComments > 3') // Ainsi on récupère meilleures annonces des ads avec + de 3 avis
+                    ->orderBy('avgRatings', 'DESC')
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult();
+    }
+                    
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
